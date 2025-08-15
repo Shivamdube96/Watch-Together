@@ -1,8 +1,24 @@
-# Watch‑Together — Shadcn UI + Supabase Realtime (v8)
+# Watch‑Together — Shadcn Styled Chat + Emoji (v9b)
 
-Fix: TypeScript typing for `useChatScroll` (accepts `RefObject<HTMLElement | null>`) + matching ref type at call site.
+- Clean shadcn look (tokens + Tailwind v4)
+- Chat bubbles with tails, timestamps, names
+- Emoji picker (emoji-picker-react) in Radix Popover
+- Realtime chat via Supabase; video sync unchanged
+
+## Setup
+```bash
+npm i
+```
+`.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+## Dev
+```bash
+npm run dev
+```
 
 ## Deploy
-1) `npm i`
-2) Add `.env.local` with your Supabase URL and anon key
-3) `npm run build` / push to Vercel
+Push to GitHub → Import on Vercel → add env vars.

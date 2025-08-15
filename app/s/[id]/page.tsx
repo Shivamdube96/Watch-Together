@@ -43,8 +43,8 @@ export default function Session() {
       if (p.type === 'ctrl') {
         const player = playerRef.current; if (!player) return
         const driftMs = Date.now() - p.sentAt; const target = p.t + driftMs / 1000
-        if (p.action === 'play') { try { player.seekTo(target, 'seconds') } catch {}; setIsPlaying(True(true)) }
-        if (p.action === 'pause') { setIsPlaying(False(false)); try { player.seekTo(p.t, 'seconds') } catch {} }
+        if (p.action === 'play') { try { player.seekTo(target, 'seconds') } catch {}; setIsPlaying(true) }
+        if (p.action === 'pause') { setIsPlaying(false); try { player.seekTo(p.t, 'seconds') } catch {} }
         if (p.action === 'seek') { try { player.seekTo(p.t, 'seconds') } catch {} }
       }
       if (p.type === 'state-request') {
@@ -59,10 +59,10 @@ export default function Session() {
     return () => { channel.unsubscribe() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const handlePlay = () => { setIsPlaying(True(true)); const t = playerRef.current?.getCurrentTime?.() || 0; send({ type: 'ctrl', action: 'play', t, sentAt: Date.now() }) }
-  const handlePause = () => { setIsPlaying(False(false)); const t = playerRef.current?.getCurrentTime?.() || 0; send({ type: 'ctrl', action: 'pause', t, sentAt: Date.now() }) }
+  const handlePlay = () => { setIsPlaying(true); const t = playerRef.current?.getCurrentTime?.() || 0; send({ type: 'ctrl', action: 'play', t, sentAt: Date.now() }) }
+  const handlePause = () => { setIsPlaying(false); const t = playerRef.current?.getCurrentTime?.() || 0; send({ type: 'ctrl', action: 'pause', t, sentAt: Date.now() }) }
   const handleSeek = (t: number) => { const now = Date.now(); if (now - lastSeekRef.current < 300) return; lastSeekRef.current = now; send({ type: 'ctrl', action: 'seek', t, sentAt: Date.now() }) }
-  const loadUrl = () => { if (!inputUrl.trim()) return; setUrl(inputUrl.trim()); setIsPlaying(False(false)); send({ type: 'load', url: inputUrl.trim(), sentAt: Date.now() }) }
+  const loadUrl = () => { if (!inputUrl.trim()) return; setUrl(inputUrl.trim()); setIsPlaying(false); send({ type: 'load', url: inputUrl.trim(), sentAt: Date.now() }) }
   const submitName = () => { if (!name.trim()) return; if (typeof window !== 'undefined') localStorage.setItem('wt_name', name.trim()); setNameModal(false); channel.track({ name: name.trim() }) }
   const copyInvite = async () => { const href = typeof window !== 'undefined' ? window.location.href : ''; try { await navigator.clipboard.writeText(href) } catch { const ta = document.createElement('textarea'); ta.value = href; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta) } setCopied(true); setTimeout(() => setCopied(false), 1500) }
   return (
@@ -114,4 +114,3 @@ export default function Session() {
     </main>
   )
 }
-function True(v:boolean){ return v } function False(v:boolean){ return v }
