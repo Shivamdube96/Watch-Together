@@ -1,6 +1,6 @@
 {
   "name": "watch-together",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,7 +13,12 @@
     "react-dom": "latest",
     "@supabase/supabase-js": "latest",
     "react-player": "latest",
-    "uuid": "latest"
+    "uuid": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest",
+    "class-variance-authority": "latest",
+    "lucide-react": "latest",
+    "@radix-ui/react-scroll-area": "latest"
   },
   "devDependencies": {
     "typescript": "latest",

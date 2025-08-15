@@ -1,8 +1,12 @@
 'use client'
 import dynamic from 'next/dynamic'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '@/lib/supabase/client'
 import { useParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { RealtimeChat } from '@/components/realtime-chat'
 
 const ReactPlayer = dynamic(
   () => import('react-player').then(m => m.default as any),
@@ -15,7 +19,6 @@ type Signal =
   | { type: 'ctrl'; action: 'play' | 'pause' | 'seek'; t: number; sentAt: number }
   | { type: 'state-request' }
   | { type: 'state'; url: string; isPlaying: boolean; t: number; sentAt: number }
-  | { type: 'chat'; msg: { name: string; text: string; at: number; ts: number } }
 
 export default function Session() {
   const params = useParams<{ id: string }>()
@@ -27,7 +30,6 @@ export default function Session() {
   const [url, setUrl] = useState('')
   const [inputUrl, setInputUrl] = useState('')
   const [isPlaying, setIsPlaying] = useState(false)
-  const [messages, setMessages] = useState<Array<{name:string;text:string;at:number;ts:number}>>([])
   const [presence, setPresence] = useState<string[]>([])
   const [copied, setCopied] = useState(false)
 
@@ -90,10 +92,6 @@ export default function Session() {
           try { player?.seekTo(target, 'seconds') } catch {}
           setIsPlaying(p.isPlaying)
         }
-
-        if (p.type === 'chat') {
-          setMessages(m => [...m, p.msg])
-        }
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -132,15 +130,6 @@ export default function Session() {
     send({ type: 'load', url: inputUrl.trim(), sentAt: Date.now() })
   }
 
-  const sendChat = (text: string) => {
-    if (!text.trim()) return
-    const player = playerRef.current
-    const at = player?.getCurrentTime?.() || 0
-    const msg = { name, text, at, ts: Date.now() }
-    setMessages(m => [...m, msg])
-    send({ type: 'chat', msg })
-  }
-
   const submitName = () => {
     if (!name.trim()) return
     if (typeof window !== 'undefined') localStorage.setItem('wt_name', name.trim())
@@ -153,7 +142,6 @@ export default function Session() {
     try {
       await navigator.clipboard.writeText(href)
     } catch {
-      // fallback
       const ta = document.createElement('textarea')
       ta.value = href
       document.body.appendChild(ta)
@@ -166,127 +154,79 @@ export default function Session() {
   }
 
   return (
-    <main className="max-w-6xl mx-auto p-4 lg:p-6">
-      <div className="flex items-center justify-between mb-4">
+    <main className="max-w-6xl mx-auto p-4 lg:p-6 space-y-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">Session: {roomId}</h1>
-          <div className="text-xs text-slate-500">Share this URL with your partner</div>
+          <h1 className="text-2xl font-semibold tracking-tight">Watch‑Together</h1>
+          <p className="text-xs text-muted-foreground">Room {roomId}. Share this link with your partner.</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="text-sm text-slate-600">Online: {presence.length}</div>
-          <button onClick={copyInvite} className="px-2 py-1 rounded border">
-            {copied ? 'Copied!' : 'Share URL'}
-          </button>
+          <div className="text-sm text-muted-foreground">Online: {presence.length}</div>
+          <Button variant="outline" onClick={copyInvite}>{copied ? 'Copied!' : 'Share URL'}</Button>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <section className="lg:col-span-2 bg-white rounded-2xl border shadow-sm p-4 space-y-3">
-          <div className="flex gap-2">
-            <input
-              className="flex-1 px-3 py-2 border rounded"
-              placeholder="Paste YouTube / Vimeo / MP4 / .m3u8 URL"
-              value={inputUrl}
-              onChange={e=>setInputUrl(e.target.value)}
-              onKeyDown={e=>{ if (e.key==='Enter') loadUrl() }}
-            />
-            <button onClick={loadUrl} className="px-3 py-2 rounded bg-blue-600 text-white">Load</button>
-          </div>
-
-          <div className="aspect-video w-full bg-slate-200 rounded-xl overflow-hidden">
-            {url ? (
-              <ReactPlayer
-                ref={playerRef}
-                url={url}
-                playing={isPlaying}
-                width="100%"
-                height="100%"
-                controls
-                onPlay={handlePlay}
-                onPause={handlePause}
-                onSeek={(seconds: number) => handleSeek(seconds)}
-                onError={() => {
-                  alert('This link cannot be embedded. We\'ll open it in a new tab.')
-                  window.open(url, '_blank')
-                }}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Paste YouTube / Vimeo / MP4 / .m3u8 URL"
+                value={inputUrl}
+                onChange={e=>setInputUrl(e.target.value)}
+                onKeyDown={e=>{ if (e.key==='Enter') loadUrl() }}
               />
-            ) : (
-              <div className="grid place-items-center h-full text-slate-500 text-sm">Paste a media URL to start</div>
-            )}
-          </div>
+              <Button onClick={loadUrl}>Load</Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="aspect-video w-full bg-muted rounded-xl overflow-hidden">
+              {url ? (
+                <ReactPlayer
+                  ref={playerRef}
+                  url={url}
+                  playing={isPlaying}
+                  width="100%"
+                  height="100%"
+                  controls
+                  onPlay={handlePlay}
+                  onPause={handlePause}
+                  onSeek={(seconds: number) => handleSeek(seconds)}
+                  onError={() => {
+                    alert('This link cannot be embedded. We\'ll open it in a new tab.')
+                    window.open(url, '_blank')
+                  }}
+                />
+              ) : (
+                <div className="grid place-items-center h-full text-muted-foreground text-sm">Paste a media URL to start</div>
+              )}
+            </div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
+              <div>Controls are synced across participants.</div>
+              <Button variant="outline" size="sm" onClick={() => send({ type: 'state-request' })}>Re-sync</Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <div className="flex items-center justify-between text-xs text-slate-600">
-            <div>Controls are synced across participants (last action wins).</div>
-            <button onClick={() => send({ type: 'state-request' })} className="px-2 py-1 rounded border">Re-sync</button>
-          </div>
-        </section>
-
-        <aside className="bg-white rounded-2xl border shadow-sm p-4 flex flex-col h-[70vh]">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold">Chat</h3>
-            <span className="text-xs text-slate-500">Timestamped</span>
-          </div>
-          <div className="flex-1 overflow-auto space-y-2 pr-1">
-            {messages.map((m, i) => (
-              <div key={i} className={`rounded p-2 border ${m.name===name? 'bg-slate-50' : 'bg-blue-50'}`}>
-                <div className="text-xs text-slate-500 flex items-center gap-2">
-                  <span className="font-medium text-slate-700">{m.name}</span>
-                  <span>@ {formatTime(m.at)}</span>
-                </div>
-                <div className="text-sm">{m.text}</div>
-              </div>
-            ))}
-            {!messages.length && <div className="text-xs text-slate-400 text-center pt-6">No messages yet.</div>}
-          </div>
-          <ChatInput onSend={sendChat} />
-        </aside>
+        <RealtimeChat roomName={String(roomId)} username={name || 'guest'} />
       </div>
 
       {nameModal && (
-        <NameModal name={name} setName={setName} onSubmit={submitName} />
+        <div className="fixed inset-0 bg-black/40 grid place-items-center p-4">
+          <div className="bg-card text-card-foreground rounded-2xl p-6 w-full max-w-sm shadow-xl border">
+            <h3 className="text-lg font-semibold mb-2">Pick a name for this session</h3>
+            <Input
+              placeholder="e.g., Alex"
+              value={name}
+              onChange={e=>setName(e.target.value)}
+              onKeyDown={e=>{ if (e.key==='Enter') submitName() }}
+              className="mb-3"
+            />
+            <Button className="w-full" onClick={submitName}>Continue</Button>
+            <p className="text-xs text-muted-foreground mt-2">No signup. Name is stored locally.</p>
+          </div>
+        </div>
       )}
     </main>
   )
-}
-
-function ChatInput({ onSend }: { onSend: (text: string) => void }) {
-  const [t, setT] = useState('')
-  return (
-    <div className="mt-3 flex gap-2">
-      <input
-        className="flex-1 px-3 py-2 border rounded"
-        placeholder="Type a message…"
-        value={t}
-        onChange={e=>setT(e.target.value)}
-        onKeyDown={e=>{ if (e.key==='Enter') { onSend(t); setT('') } }}
-      />
-      <button onClick={() => { onSend(t); setT('') }} className="px-3 py-2 rounded bg-blue-600 text-white">Send</button>
-    </div>
-  )
-}
-
-function NameModal({ name, setName, onSubmit }: { name:string; setName:(s:string)=>void; onSubmit:()=>void }) {
-  return (
-    <div className="fixed inset-0 bg-black/40 grid place-items-center p-4">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl border">
-        <h3 className="text-lg font-semibold mb-2">Pick a name for this session</h3>
-        <input
-          className="w-full px-3 py-2 border rounded mb-3"
-          placeholder="e.g., Alex"
-          value={name}
-          onChange={e=>setName(e.target.value)}
-          onKeyDown={e=>{ if (e.key==='Enter') onSubmit() }}
-        />
-        <button onClick={onSubmit} className="w-full px-3 py-2 rounded bg-black text-white">Continue</button>
-        <p className="text-xs text-slate-500 mt-2">No signup. Name is stored locally.</p>
-      </div>
-    </div>
-  )
-}
-
-function formatTime(t: number) {
-  const s = Math.max(0, Math.floor(t))
-  const mm = String(Math.floor(s/60)).padStart(2, '0')
-  const ss = String(s%60).padStart(2, '0')
-  return `${mm}:${ss}`
 }
