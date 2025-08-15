@@ -1,6 +1,6 @@
 {
   "name": "watch-together",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,8 +19,7 @@
     "class-variance-authority": "latest",
     "lucide-react": "latest",
     "@radix-ui/react-scroll-area": "latest",
-    "@radix-ui/react-popover": "latest",
-    "emoji-picker-react": "latest"
+    "boring-avatars": "latest"
   },
   "devDependencies": {
     "typescript": "latest",

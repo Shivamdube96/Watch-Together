@@ -1,7 +1,7 @@
-# v11 — Fix chat overflow
+# v12 — Capsule messages, no emoji button, random avatars
 
-- `CardContent` uses `min-h-0` so the ScrollArea owns the scroll.
-- `ScrollArea` forwards the **viewport ref** and has `h-full` root.
-- The input row is `shrink-0` so it stays pinned at the bottom.
+- **Capsule** chat messages (no tail) for a tidy, modern look.
+- Removed emoji picker/button (users can type emojis from keyboard).
+- **Random avatars** per user via `boring-avatars` (deterministic by name).
 
-Deploy over v10.
+Install & deploy like previous versions.
