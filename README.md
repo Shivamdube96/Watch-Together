@@ -1,6 +1,8 @@
-# Watch-Together (Next.js + Supabase) — v3
+# Watch-Together (Next.js + Supabase) — v4
 
-**Fixes:** JSX conditionals (`&&` instead of `and`) + boolean state setters cleaned. Tailwind v4 PostCSS plugin is configured.
+Fixes:
+- Tailwind v4: removed `@apply` from globals.css, moved classes to layout body.
+- TypeScript: cast dynamic `react-player` import to `any` to satisfy changing typings.
 
 ## Setup
 
@@ -9,7 +11,7 @@
 npm i
 ```
 
-2) Env vars in `.env.local`:
+2) Add `.env.local`:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
@@ -22,8 +24,7 @@ npm run dev
 
 ## Deploy (Vercel)
 - Push to GitHub and import.
-- Add env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+- Set env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
 
-## Notes
-- Dynamic import uses `react-player` main entry.
-- Conditional rendering uses `&&` for JSX.
+Notes:
+- If you prefer strict types, add `npm i -D @types/react-player` (but the library bundles its own types that vary per version).

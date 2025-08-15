@@ -4,7 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useParams } from 'next/navigation'
 
-const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })
+const ReactPlayer = dynamic(
+  () => import('react-player').then(m => m.default as any),
+  { ssr: false }
+) as any
 
 type Signal =
   | { type: 'presence'; name: string }
