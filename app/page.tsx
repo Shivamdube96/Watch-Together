@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter()
   return (
     <main className="max-w-2xl mx-auto p-6 space-y-6">
-      <div className="py-10 rounded-3xl border shadow-sm bg-gradient-to-b from-white/40 to-white/10 dark:from-zinc-900/60 dark:to-zinc-900/20 backdrop-blur">
+      <div className="py-10 rounded-3xl border shadow-sm bg-gradient-to-b from-white/5 to-white/0 dark:from-zinc-900/60 dark:to-zinc-900/20 backdrop-blur">
         <h1 className="text-4xl font-semibold tracking-tight text-center">Watch‑Together</h1>
         <p className="text-muted-foreground mt-2 text-center">Paste a link, watch at the same time, and chat — no signup required.</p>
       </div>

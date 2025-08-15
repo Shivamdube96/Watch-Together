@@ -10,7 +10,7 @@ import { ChatMessageItem } from '@/components/chat-message'
 import { Send } from 'lucide-react'
 
 export function RealtimeChat({ roomName, username }: { roomName: string; username: string }) {
-  const { messages, sendMessage } = useRealtimeChat(roomName, username)
+  const { messages, reactions, sendMessage, toggleReaction } = useRealtimeChat(roomName, username)
   const [t, setT] = useState('')
   const viewportRef = useRef<HTMLDivElement | null>(null)
   useChatScroll(messages, viewportRef)
@@ -28,7 +28,14 @@ export function RealtimeChat({ roomName, username }: { roomName: string; usernam
           <ScrollArea ref={viewportRef} className="h-full">
             <div className="pr-1 pb-2">
               {messages.map((m, i) => (
-                <ChatMessageItem key={m.id + i} message={m} isOwn={m.user.name === username} />
+                <ChatMessageItem
+                  key={m.id + i}
+                  message={m}
+                  isOwn={m.user.name === username}
+                  username={username}
+                  reactionMap={reactions[m.id]}
+                  onToggle={(emoji) => toggleReaction(m.id, emoji)}
+                />
               ))}
               {!messages.length && <div className="text-xs text-muted-foreground text-center pt-6">No messages yet.</div>}
             </div>

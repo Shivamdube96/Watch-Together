@@ -1,7 +1,12 @@
-# v12 — Capsule messages, no emoji button, random avatars
+# v13 — Reactions + dark-mode default
 
-- **Capsule** chat messages (no tail) for a tidy, modern look.
-- Removed emoji picker/button (users can type emojis from keyboard).
-- **Random avatars** per user via `boring-avatars` (deterministic by name).
+- Capsule chat + **message reactions** (👍 ❤️ 😂 😮 😢 👏). Click to toggle; counts sync live via Supabase Realtime.
+- **Dark mode by default** (html has `class="dark"`). You can add a toggle later if you want.
+- No Radix popover dependency; build error fixed.
 
-Install & deploy like previous versions.
+Install:
+```bash
+npm i
+npm run dev
+```
+Deploy on Vercel with your same env vars.
