@@ -50,7 +50,8 @@ export default function Session() {
         const p = payload as Signal
 
         if (p.type === 'load') {
-          setUrl(p.url); setIsPlaying(false)
+          setUrl(p.url)
+          setIsPlaying(false)
         }
 
         if (p.type === 'ctrl') {
@@ -58,9 +59,17 @@ export default function Session() {
           if (!player) return
           const driftMs = Date.now() - p.sentAt
           const target = p.t + driftMs / 1000
-          if (p.action === 'play') { try { player.seekTo(target, 'seconds') } catch {}; setIsPlaying(true) }
-          if (p.action === 'pause') { setIsPlaying(false); try { player.seekTo(p.t, 'seconds') } catch {} }
-          if (p.action === 'seek') { try { player.seekTo(p.t, 'seconds') } catch {} }
+          if (p.action === 'play') {
+            try { player.seekTo(target, 'seconds') } catch {}
+            setIsPlaying(true)
+          }
+          if (p.action === 'pause') {
+            setIsPlaying(false)
+            try { player.seekTo(p.t, 'seconds') } catch {}
+          }
+          if (p.action === 'seek') {
+            try { player.seekTo(p.t, 'seconds') } catch {}
+          }
         }
 
         if (p.type === 'state-request') {
@@ -78,7 +87,9 @@ export default function Session() {
           setIsPlaying(p.isPlaying)
         }
 
-        if (p.type === 'chat') setMessages(m => [...m, p.msg])
+        if (p.type === 'chat') {
+          setMessages(m => [...m, p.msg])
+        }
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -92,13 +103,13 @@ export default function Session() {
   }, [])
 
   const handlePlay = () => {
-    setIsPlaying(TrueFix(true))
+    setIsPlaying(true)
     const player = playerRef.current
     const t = player?.getCurrentTime?.() || 0
     send({ type: 'ctrl', action: 'play', t, sentAt: Date.now() })
   }
   const handlePause = () => {
-    setIsPlaying(FalseFix(false))
+    setIsPlaying(false)
     const player = playerRef.current
     const t = player?.getCurrentTime?.() || 0
     send({ type: 'ctrl', action: 'pause', t, sentAt: Date.now() })
@@ -113,7 +124,7 @@ export default function Session() {
   const loadUrl = () => {
     if (!inputUrl.trim()) return
     setUrl(inputUrl.trim())
-    setIsPlaying(FalseFix(false))
+    setIsPlaying(false)
     send({ type: 'load', url: inputUrl.trim(), sentAt: Date.now() })
   }
 
@@ -199,22 +210,18 @@ export default function Session() {
                 <div className="text-sm">{m.text}</div>
               </div>
             ))}
-            {!messages.length and <div className="text-xs text-slate-400 text-center pt-6">No messages yet.</div>}
+            {!messages.length && <div className="text-xs text-slate-400 text-center pt-6">No messages yet.</div>}
           </div>
           <ChatInput onSend={sendChat} />
         </aside>
       </div>
 
-      {nameModal and (
+      {nameModal && (
         <NameModal name={name} setName={setName} onSubmit={submitName} />
       )}
     </main>
   )
 }
-
-// helpers to avoid type-narrowing issues on booleans with setState
-function TrueFix(v: boolean){ return v }
-function FalseFix(v: boolean){ return v }
 
 function ChatInput({ onSend }: { onSend: (text: string) => void }) {
   const [t, setT] = useState('')

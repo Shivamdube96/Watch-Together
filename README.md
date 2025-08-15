@@ -1,6 +1,6 @@
-# Watch-Together (Next.js + Supabase) — v2
+# Watch-Together (Next.js + Supabase) — v3
 
-Patched for Tailwind v4's PostCSS plugin (`@tailwindcss/postcss`) and fixed imports/aliases.
+**Fixes:** JSX conditionals (`&&` instead of `and`) + boolean state setters cleaned. Tailwind v4 PostCSS plugin is configured.
 
 ## Setup
 
@@ -21,12 +21,9 @@ npm run dev
 ```
 
 ## Deploy (Vercel)
-
 - Push to GitHub and import.
-- Set env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+- Add env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
 
 ## Notes
-
-- PostCSS uses `@tailwindcss/postcss` (Tailwind v4+ requirement).
-- Alias `@/*` is configured in `tsconfig.json`.
-- `react-player` is dynamically imported from the main module.
+- Dynamic import uses `react-player` main entry.
+- Conditional rendering uses `&&` for JSX.
