@@ -2,7 +2,6 @@
 import * as React from 'react'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import { cn } from '@/lib/utils'
-
 type Props = { className?: string; children: React.ReactNode } & ScrollAreaPrimitive.ScrollAreaProps
 export const ScrollArea = React.forwardRef<HTMLDivElement, Props>(function ScrollArea(
   { className, children, ...props }, ref

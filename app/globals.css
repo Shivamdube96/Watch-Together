@@ -34,7 +34,7 @@
 }
 
 .dark {
-  --background: 240 10% 4%;      /* zinc-950 */
+  --background: 240 10% 4%;
   --foreground: 0 0% 98%;
 
   --muted: 240 4% 16%;
@@ -64,7 +64,6 @@
   --ring: 240 5% 64%;
 }
 
-/* Map tokens to Tailwind v4 color names */
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -89,7 +88,6 @@
 
 html, body { height: 100%; }
 
-/* Background glow */
 body {
   min-height: 100%;
   background: radial-gradient(800px 300px at 20% -10%, rgba(24,24,27,0.12), transparent),
@@ -98,6 +96,5 @@ body {
   color: hsl(var(--foreground));
 }
 
-/* Focus ring */
 :where(button, input) { outline: none; }
 :where(button, input):focus-visible { box-shadow: 0 0 0 2px hsl(var(--ring)); }

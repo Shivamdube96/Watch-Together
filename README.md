@@ -1,12 +1,12 @@
-# v13 — Reactions + dark-mode default
+# v13.1 — Fix build (remove popover), reactions + dark mode
 
-- Capsule chat + **message reactions** (👍 ❤️ 😂 😮 😢 👏). Click to toggle; counts sync live via Supabase Realtime.
-- **Dark mode by default** (html has `class="dark"`). You can add a toggle later if you want.
-- No Radix popover dependency; build error fixed.
+- Removed `components/ui/popover.tsx` completely — no `@radix-ui/react-popover` required.
+- Chat **reactions** (👍 ❤️ 😂 😮 😢 👏) sync live via Supabase Realtime.
+- **Dark mode default** (set on <html class="dark">).
 
-Install:
-```bash
-npm i
-npm run dev
-```
-Deploy on Vercel with your same env vars.
+Deploy
+1) Unzip and push to a fresh repo or replace your existing files.
+2) Set envs on Vercel:
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
+3) `npm i && npm run build` locally (optional), then deploy.

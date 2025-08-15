@@ -8,15 +8,12 @@ import { useRealtimeChat } from '@/hooks/use-realtime-chat'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { ChatMessageItem } from '@/components/chat-message'
 import { Send } from 'lucide-react'
-
 export function RealtimeChat({ roomName, username }: { roomName: string; username: string }) {
   const { messages, reactions, sendMessage, toggleReaction } = useRealtimeChat(roomName, username)
   const [t, setT] = useState('')
   const viewportRef = useRef<HTMLDivElement | null>(null)
   useChatScroll(messages, viewportRef)
-
   const handleSend = () => { if (!t.trim()) return; sendMessage(t); setT('') }
-
   return (
     <Card className="flex flex-col h-[70vh] backdrop-blur supports-[backdrop-filter]:bg-card/90">
       <CardHeader className="flex items-center justify-between shrink-0">
@@ -42,16 +39,8 @@ export function RealtimeChat({ roomName, username }: { roomName: string; usernam
           </ScrollArea>
         </div>
         <div className="flex items-center gap-2 pt-2 shrink-0">
-          <Input
-            placeholder="Type a message…"
-            value={t}
-            onChange={(e)=>setT(e.target.value)}
-            onKeyDown={(e)=>{ if (e.key==='Enter') handleSend() }}
-            className="flex-1"
-          />
-          <Button onClick={handleSend} aria-label="Send">
-            <Send className="h-4 w-4 mr-2" /> Send
-          </Button>
+          <Input placeholder="Type a message…" value={t} onChange={(e)=>setT(e.target.value)} onKeyDown={(e)=>{ if (e.key==='Enter') handleSend() }} className="flex-1" />
+          <Button onClick={handleSend} aria-label="Send"><Send className="h-4 w-4 mr-2" /> Send</Button>
         </div>
       </CardContent>
     </Card>
