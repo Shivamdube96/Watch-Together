@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 import type { ChatMessage } from '@/hooks/use-realtime-chat'
-
 export function ChatMessageItem({ message, isOwn }: { message: ChatMessage; isOwn: boolean }) {
   return (
     <div className={cn('flex mt-2', isOwn ? 'justify-end' : 'justify-start')}>

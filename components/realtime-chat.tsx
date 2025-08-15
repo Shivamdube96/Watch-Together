@@ -8,10 +8,10 @@ import { useRealtimeChat } from '@/hooks/use-realtime-chat'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import { ChatMessageItem } from '@/components/chat-message'
 
-export function RealtimeChat({ roomName, username, onMessage }: { roomName: string; username: string; onMessage?: (messages: any[]) => void }) {
+export function RealtimeChat({ roomName, username }: { roomName: string; username: string }) {
   const { messages, sendMessage } = useRealtimeChat(roomName, username)
   const [t, setT] = useState('')
-  const listRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement | null>(null)
   useChatScroll(messages, listRef)
 
   return (

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-
 type Props = React.InputHTMLAttributes<HTMLInputElement>
 export function Input({ className, ...props }: Props) {
   return (
