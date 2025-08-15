@@ -1,30 +1,27 @@
-# Watch-Together (Next.js + Supabase) — v4
+# Watch-Together (Next.js + Supabase) — v5
 
-Fixes:
-- Tailwind v4: removed `@apply` from globals.css, moved classes to layout body.
-- TypeScript: cast dynamic `react-player` import to `any` to satisfy changing typings.
+**Fix Tailwind v4 missing CSS in production**
+
+- Uses Tailwind v4's `@import "tailwindcss";` in `app/globals.css`
+- ESM PostCSS config `postcss.config.mjs` with `["@tailwindcss/postcss"]`
+- Removed `tailwind.config.js` (v4 auto-detects sources)
+- Keeps earlier fixes: layout body classes, ReactPlayer typing, `@/*` alias
 
 ## Setup
 
-1) Install deps:
 ```bash
 npm i
 ```
 
-2) Add `.env.local`:
+Create `.env.local`:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
 
-3) Dev:
+Run locally:
 ```bash
 npm run dev
 ```
 
-## Deploy (Vercel)
-- Push to GitHub and import.
-- Set env vars (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
-
-Notes:
-- If you prefer strict types, add `npm i -D @types/react-player` (but the library bundles its own types that vary per version).
+Deploy on Vercel and set the same env vars.
