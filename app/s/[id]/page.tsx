@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useParams } from 'next/navigation'
 
-const ReactPlayer = dynamic(() => import('react-player/lazy'), { ssr: false })
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false })
 
 type Signal =
   | { type: 'presence'; name: string }
