@@ -29,6 +29,7 @@ export default function Session() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [messages, setMessages] = useState<Array<{name:string;text:string;at:number;ts:number}>>([])
   const [presence, setPresence] = useState<string[]>([])
+  const [copied, setCopied] = useState(false)
 
   const playerRef = useRef<any>(null)
   const lastSeekRef = useRef<number>(0)
@@ -147,6 +148,23 @@ export default function Session() {
     channel.track({ name: name.trim() })
   }
 
+  const copyInvite = async () => {
+    const href = typeof window !== 'undefined' ? window.location.href : ''
+    try {
+      await navigator.clipboard.writeText(href)
+    } catch {
+      // fallback
+      const ta = document.createElement('textarea')
+      ta.value = href
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+    }
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
   return (
     <main className="max-w-6xl mx-auto p-4 lg:p-6">
       <div className="flex items-center justify-between mb-4">
@@ -154,7 +172,12 @@ export default function Session() {
           <h1 className="text-xl font-semibold">Session: {roomId}</h1>
           <div className="text-xs text-slate-500">Share this URL with your partner</div>
         </div>
-        <div className="text-sm text-slate-600">Online: {presence.length}</div>
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-slate-600">Online: {presence.length}</div>
+          <button onClick={copyInvite} className="px-2 py-1 rounded border">
+            {copied ? 'Copied!' : 'Share URL'}
+          </button>
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
