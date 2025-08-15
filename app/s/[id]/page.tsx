@@ -78,7 +78,7 @@ export default function Session() {
         </div>
       </div>
       <div className="grid lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 backdrop-blur supports-[backdrop-filter]:bg-card/90">
           <CardHeader>
             <div className="flex gap-2">
               <Input placeholder="Paste YouTube / Vimeo / MP4 / .m3u8 URL" value={inputUrl} onChange={e=>setInputUrl(e.target.value)} onKeyDown={e=>{ if (e.key==='Enter') loadUrl() }} />
@@ -86,7 +86,7 @@ export default function Session() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="aspect-video w-full bg-muted rounded-xl overflow-hidden">
+            <div className="aspect-video w-full bg-muted rounded-2xl overflow-hidden ring-1 ring-border">
               {url ? (
                 <ReactPlayer ref={playerRef} url={url} playing={isPlaying} width="100%" height="100%" controls onPlay={handlePlay} onPause={handlePause} onSeek={(s:number)=>handleSeek(s)} onError={()=>{ alert('This link cannot be embedded. We\'ll open it in a new tab.'); window.open(url, '_blank') }} />
               ) : (
@@ -103,7 +103,7 @@ export default function Session() {
       </div>
       {nameModal && (
         <div className="fixed inset-0 bg-black/40 grid place-items-center p-4">
-          <div className="bg-card text-card-foreground rounded-2xl p-6 w-full max-w-sm shadow-xl border">
+          <div className="bg-card text-card-foreground rounded-3xl p-6 w-full max-w-sm shadow-xl border">
             <h3 className="text-lg font-semibold mb-2">Pick a name for this session</h3>
             <Input placeholder="e.g., Alex" value={name} onChange={e=>setName(e.target.value)} onKeyDown={e=>{ if (e.key==='Enter') submitName() }} className="mb-3" />
             <Button className="w-full" onClick={submitName}>Continue</Button>

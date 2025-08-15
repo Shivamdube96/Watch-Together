@@ -8,15 +8,15 @@ export default function Home() {
   const router = useRouter()
   return (
     <main className="max-w-2xl mx-auto p-6 space-y-6">
-      <div className="py-6">
-        <h1 className="text-4xl font-semibold tracking-tight">Watch‑Together</h1>
-        <p className="text-muted-foreground mt-2">Paste a link, watch at the same time, and chat — no signup required.</p>
+      <div className="py-10 rounded-3xl border shadow-sm bg-gradient-to-b from-white/40 to-white/10 dark:from-zinc-900/60 dark:to-zinc-900/20 backdrop-blur">
+        <h1 className="text-4xl font-semibold tracking-tight text-center">Watch‑Together</h1>
+        <p className="text-muted-foreground mt-2 text-center">Paste a link, watch at the same time, and chat — no signup required.</p>
       </div>
       <Card>
         <CardHeader className="font-medium">Start a session</CardHeader>
-        <CardContent>
+        <CardContent className="flex items-center gap-3">
           <Button onClick={() => router.push(`/s/${uuidv4()}`)}>Create a session</Button>
-          <p className="text-xs text-muted-foreground mt-3">Works with YouTube, Vimeo, MP4, and HLS (.m3u8).</p>
+          <p className="text-xs text-muted-foreground">Works with YouTube, Vimeo, MP4, and HLS (.m3u8).</p>
         </CardContent>
       </Card>
     </main>

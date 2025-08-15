@@ -1,9 +1,11 @@
-# Watch‑Together — Shadcn Styled Chat + Emoji (v9b)
+# Watch‑Together — Zinc theme glow‑up (v10)
 
-- Clean shadcn look (tokens + Tailwind v4)
-- Chat bubbles with tails, timestamps, names
-- Emoji picker (emoji-picker-react) in Radix Popover
-- Realtime chat via Supabase; video sync unchanged
+- **shadcn 'zinc' theme** mapped to Tailwind v4 tokens
+- Subtle **radial background glow**
+- Softer **rounded-3xl** cards, pill inputs, nicer focus rings
+- **Chat bubbles** with avatars (initials), tails, timestamps
+- **Emoji picker** (emoji-picker-react) in Radix Popover
+- Supabase Realtime chat + synced video controls
 
 ## Setup
 ```bash

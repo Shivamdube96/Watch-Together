@@ -20,18 +20,11 @@ export function RealtimeChat({ roomName, username }: { roomName: string; usernam
   const listRef = useRef<HTMLDivElement | null>(null)
   useChatScroll(messages, listRef)
 
-  const onEmojiClick = (emojiData: any) => {
-    const emoji = emojiData?.emoji || ''
-    setT((prev) => prev + emoji)
-  }
-
-  const handleSend = () => {
-    if (!t.trim()) return
-    sendMessage(t); setT('')
-  }
+  const onEmojiClick = (emojiData: any) => setT(prev => prev + (emojiData?.emoji ?? ''))
+  const handleSend = () => { if (!t.trim()) return; sendMessage(t); setT('') }
 
   return (
-    <Card className="flex flex-col h-[70vh]">
+    <Card className="flex flex-col h-[70vh] backdrop-blur supports-[backdrop-filter]:bg-card/90">
       <CardHeader className="flex items-center justify-between">
         <div className="font-semibold">Chat</div>
         <div className="text-xs text-muted-foreground">Realtime via Supabase</div>
@@ -60,7 +53,7 @@ export function RealtimeChat({ roomName, username }: { roomName: string; usernam
             placeholder="Type a message…"
             value={t}
             onChange={(e)=>setT(e.target.value)}
-            onKeyDown={(e)=>{ if (e.key==='Enter') { handleSend() } }}
+            onKeyDown={(e)=>{ if (e.key==='Enter') handleSend() }}
             className="flex-1"
           />
           <Button onClick={handleSend} aria-label="Send">
