@@ -17,28 +17,30 @@ export function RealtimeChat({ roomName, username }: { roomName: string; usernam
   const { messages, sendMessage } = useRealtimeChat(roomName, username)
   const [t, setT] = useState('')
   const [open, setOpen] = useState(false)
-  const listRef = useRef<HTMLDivElement | null>(null)
-  useChatScroll(messages, listRef)
+  const viewportRef = useRef<HTMLDivElement | null>(null)
+  useChatScroll(messages, viewportRef)
 
   const onEmojiClick = (emojiData: any) => setT(prev => prev + (emojiData?.emoji ?? ''))
   const handleSend = () => { if (!t.trim()) return; sendMessage(t); setT('') }
 
   return (
     <Card className="flex flex-col h-[70vh] backdrop-blur supports-[backdrop-filter]:bg-card/90">
-      <CardHeader className="flex items-center justify-between">
+      <CardHeader className="flex items-center justify-between shrink-0">
         <div className="font-semibold">Chat</div>
         <div className="text-xs text-muted-foreground">Realtime via Supabase</div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col gap-2">
-        <ScrollArea className="flex-1">
-          <div ref={listRef} className="pr-1">
-            {messages.map((m, i) => (
-              <ChatMessageItem key={m.id + i} message={m} isOwn={m.user.name === username} />
-            ))}
-            {!messages.length && <div className="text-xs text-muted-foreground text-center pt-6">No messages yet.</div>}
-          </div>
-        </ScrollArea>
-        <div className="flex items-center gap-2 pt-2">
+      <CardContent className="flex-1 min-h-0 flex flex-col gap-2">
+        <div className="flex-1 min-h-0">
+          <ScrollArea ref={viewportRef} className="h-full">
+            <div className="pr-1 pb-2">
+              {messages.map((m, i) => (
+                <ChatMessageItem key={m.id + i} message={m} isOwn={m.user.name === username} />
+              ))}
+              {!messages.length && <div className="text-xs text-muted-foreground text-center pt-6">No messages yet.</div>}
+            </div>
+          </ScrollArea>
+        </div>
+        <div className="flex items-center gap-2 pt-2 shrink-0">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button variant="outline" size="icon" aria-label="Emoji">

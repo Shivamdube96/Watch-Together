@@ -1,26 +1,7 @@
-# Watch‑Together — Zinc theme glow‑up (v10)
+# v11 — Fix chat overflow
 
-- **shadcn 'zinc' theme** mapped to Tailwind v4 tokens
-- Subtle **radial background glow**
-- Softer **rounded-3xl** cards, pill inputs, nicer focus rings
-- **Chat bubbles** with avatars (initials), tails, timestamps
-- **Emoji picker** (emoji-picker-react) in Radix Popover
-- Supabase Realtime chat + synced video controls
+- `CardContent` uses `min-h-0` so the ScrollArea owns the scroll.
+- `ScrollArea` forwards the **viewport ref** and has `h-full` root.
+- The input row is `shrink-0` so it stays pinned at the bottom.
 
-## Setup
-```bash
-npm i
-```
-`.env.local`:
-```
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-```
-
-## Dev
-```bash
-npm run dev
-```
-
-## Deploy
-Push to GitHub → Import on Vercel → add env vars.
+Deploy over v10.
