@@ -17,7 +17,9 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",
