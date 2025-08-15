@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter()
   return (
     <main className="max-w-xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-semibold">Watch‑Together</h1>
+      <h1 className="text-3xl font-semibold">Watch-Together</h1>
       <p className="text-slate-600">Paste a link, watch at the same time, and chat—no signup required.</p>
 
       <div className="flex gap-2">

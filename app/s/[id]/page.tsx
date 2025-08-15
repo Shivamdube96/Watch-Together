@@ -30,7 +30,6 @@ export default function Session() {
   const playerRef = useRef<any>(null)
   const lastSeekRef = useRef<number>(0)
 
-  // channel with presence
   const channel = useMemo(() =>
     supabase.channel(`room-${roomId}`, { config: { presence: { key: 'anon' } } }), [roomId])
 
@@ -39,11 +38,9 @@ export default function Session() {
   }
 
   useEffect(() => {
-    // Load cached name if exists
     const cached = typeof window !== 'undefined' ? localStorage.getItem('wt_name') : null
     if (cached) { setName(cached); setNameModal(false) }
 
-    // Subscribe
     channel
       .on('presence', { event: 'sync' }, () => {
         const state = channel.presenceState() as Record<string, Array<any>>
@@ -53,8 +50,7 @@ export default function Session() {
         const p = payload as Signal
 
         if (p.type === 'load') {
-          setUrl(p.url)
-          setIsPlaying(false)
+          setUrl(p.url); setIsPlaying(false)
         }
 
         if (p.type === 'ctrl') {
@@ -62,17 +58,9 @@ export default function Session() {
           if (!player) return
           const driftMs = Date.now() - p.sentAt
           const target = p.t + driftMs / 1000
-          if (p.action === 'play') {
-            try { player.seekTo(target, 'seconds') } catch {}
-            setIsPlaying(true)
-          }
-          if (p.action === 'pause') {
-            setIsPlaying(false)
-            try { player.seekTo(p.t, 'seconds') } catch {}
-          }
-          if (p.action === 'seek') {
-            try { player.seekTo(p.t, 'seconds') } catch {}
-          }
+          if (p.action === 'play') { try { player.seekTo(target, 'seconds') } catch {}; setIsPlaying(true) }
+          if (p.action === 'pause') { setIsPlaying(false); try { player.seekTo(p.t, 'seconds') } catch {} }
+          if (p.action === 'seek') { try { player.seekTo(p.t, 'seconds') } catch {} }
         }
 
         if (p.type === 'state-request') {
@@ -90,14 +78,11 @@ export default function Session() {
           setIsPlaying(p.isPlaying)
         }
 
-        if (p.type === 'chat') {
-          setMessages(m => [...m, p.msg])
-        }
+        if (p.type === 'chat') setMessages(m => [...m, p.msg])
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           channel.track({ name: name || 'guest' })
-          // Ask others for current state
           send({ type: 'state-request' })
         }
       })
@@ -107,13 +92,13 @@ export default function Session() {
   }, [])
 
   const handlePlay = () => {
-    setIsPlaying(true)
+    setIsPlaying(TrueFix(true))
     const player = playerRef.current
     const t = player?.getCurrentTime?.() || 0
     send({ type: 'ctrl', action: 'play', t, sentAt: Date.now() })
   }
   const handlePause = () => {
-    setIsPlaying(false)
+    setIsPlaying(FalseFix(false))
     const player = playerRef.current
     const t = player?.getCurrentTime?.() || 0
     send({ type: 'ctrl', action: 'pause', t, sentAt: Date.now() })
@@ -128,7 +113,7 @@ export default function Session() {
   const loadUrl = () => {
     if (!inputUrl.trim()) return
     setUrl(inputUrl.trim())
-    setIsPlaying(false)
+    setIsPlaying(FalseFix(false))
     send({ type: 'load', url: inputUrl.trim(), sentAt: Date.now() })
   }
 
@@ -141,7 +126,6 @@ export default function Session() {
     send({ type: 'chat', msg })
   }
 
-  // Name capture
   const submitName = () => {
     if (!name.trim()) return
     if (typeof window !== 'undefined') localStorage.setItem('wt_name', name.trim())
@@ -196,11 +180,10 @@ export default function Session() {
 
           <div className="flex items-center justify-between text-xs text-slate-600">
             <div>Controls are synced across participants (last action wins).</div>
-            <button onClick={() => send({ type: 'state-request' })} className="px-2 py-1 rounded border">Re‑sync</button>
+            <button onClick={() => send({ type: 'state-request' })} className="px-2 py-1 rounded border">Re-sync</button>
           </div>
         </section>
 
-        {/* Chat */}
         <aside className="bg-white rounded-2xl border shadow-sm p-4 flex flex-col h-[70vh]">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-semibold">Chat</h3>
@@ -216,18 +199,22 @@ export default function Session() {
                 <div className="text-sm">{m.text}</div>
               </div>
             ))}
-            {!messages.length && <div className="text-xs text-slate-400 text-center pt-6">No messages yet.</div>}
+            {!messages.length and <div className="text-xs text-slate-400 text-center pt-6">No messages yet.</div>}
           </div>
           <ChatInput onSend={sendChat} />
         </aside>
       </div>
 
-      {nameModal && (
+      {nameModal and (
         <NameModal name={name} setName={setName} onSubmit={submitName} />
       )}
     </main>
   )
 }
+
+// helpers to avoid type-narrowing issues on booleans with setState
+function TrueFix(v: boolean){ return v }
+function FalseFix(v: boolean){ return v }
 
 function ChatInput({ onSend }: { onSend: (text: string) => void }) {
   const [t, setT] = useState('')
